@@ -96,9 +96,25 @@ entries = sorted(entries, key=lambda x: x.name)
 
 unique_graph_concepts = merge_duplicates(entries)
 
-for i in range(50):
+all_key_words = {}
+for concept in unique_graph_concepts:
+    all_key_words.update(concept.key_words)
+
+for i in range(10):
     print(unique_graph_concepts[i].key_words)
 
 write_to_file(unique_graph_concepts, 'converted_data.json')
 
+all_key_words_sorted = dict(sorted(all_key_words.items(), key=lambda item: item[1]))
+sum_of_values = sum(all_key_words_sorted.values())
+all_key_words_sorted_with_freq = {key: (value, value/sum_of_values) for key, value in all_key_words_sorted.items()}
+
+for concept in unique_graph_concepts:
+    for key in concept.key_words:
+        concept.key_words[key] = all_key_words_sorted_with_freq[key]
+
+print(unique_graph_concepts[0])
+write_to_file(unique_graph_concepts, 'unique_graph_concepts_with_freq.json')
 print(len(unique_graph_concepts))
+# base: concepts + key words
+# вивести дотичні поняття
