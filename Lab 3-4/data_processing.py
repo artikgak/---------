@@ -89,7 +89,7 @@ def merge_duplicates(entries:List[GraphConcept]) -> List[GraphConcept]:
 
 #################################################################
 
-entries = get_data('raw_data.json')
+entries = get_data('raw_data_from_dbpedia.json')
 invert_index = create_inverted_index(entries)
 update_frequencies(entries, invert_index)
 entries = sorted(entries, key=lambda x: x.name)
