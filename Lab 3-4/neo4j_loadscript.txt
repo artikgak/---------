@@ -1,0 +1,9 @@
+CALL apoc.load.json("file:///converted_data.json")
+YIELD value
+MERGE (c:GraphConcept {name: value.name})
+SET c.uri = value.uri, c.description = value.description
+WITH c, value
+UNWIND keys(value.key_words) AS keyword
+MERGE (kw:KeyWord {name: keyword})
+ON CREATE SET kw.frequency = value.key_words[keyword]
+MERGE (c)-[:Has_KeyWord]->(kw);

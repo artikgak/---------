@@ -115,6 +115,13 @@ for concept in unique_graph_concepts:
 
 print(unique_graph_concepts[0])
 write_to_file(unique_graph_concepts, 'unique_graph_concepts_with_freq.json')
+
+#with open("key_word_with_freq.txt", 'w') as f:  
+#    for key, value in all_key_words_sorted_with_freq.items():  
+#        f.write('%s:%s\n' % (key, value))
+
+#for x in unique_graph_concepts:
+#    print(x.name)
 print(len(unique_graph_concepts))
-# base: concepts + key words
-# вивести дотичні поняття
+print(len(all_key_words_sorted_with_freq))
+print(sum_of_values)
