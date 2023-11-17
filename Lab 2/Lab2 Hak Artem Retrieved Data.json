@@ -1,17 +1,21 @@
-     define input:ifp "IFP_OFF"  select ?s1 as ?c1, (bif:search_excerpt (bif:vector ('GRAPH', 'THEORY'), ?o1)) as ?c2, ?sc, ?rank, ?g where {{{ select ?s1, (?sc * 3e-1) as ?sc, ?o1, (sql:rnk_scale (<LONG::IRI_RANK> (?s1))) as ?rank, ?g where  
-  { 
-    quad map virtrdf:DefaultQuadMap 
-    { 
-      graph ?g 
-      { 
-         ?s1 ?s1textp ?o1 .
-        ?o1 bif:contains  '(GRAPH AND THEORY AND (CYCLIC OR ACYCLIC OR WEIGHTED OR UNWEIGHTED OR ORIENTED OR DIRECTED OR UNDIRECTED))'  option (score ?sc)  .
-        
+define input:ifp "IFP_OFF"
+define input:default-graph-uri <https://dbpedia.org/>
+
+SELECT ?s1 AS ?c1, (bif:search_excerpt(bif:vector('GRAPH', 'THEORY'), ?o1)) AS ?c2, ?sc, ?rank, ?g
+WHERE {
+  {
+    SELECT ?s1, (?computed_score * 3e-1) AS ?sc, ?o1, (sql:rnk_scale(<LONG::IRI_RANK>(?s1))) AS ?rank, ?g
+    WHERE {
+      GRAPH ?g {
+        ?s1 ?s1textp ?o1 .
+        ?o1 bif:contains '(GRAPH AND THEORY)' option (score ?computed_score) .
       }
-     }
-    
+    }
+    ORDER BY DESC((?computed_score * 3e-1) + sql:rnk_scale(<LONG::IRI_RANK>(?s1)))
+    LIMIT 50 OFFSET 50
   }
- order by desc (?sc * 3e-1 + sql:rnk_scale (<LONG::IRI_RANK> (?s1)))  limit 2000  offset 0 }}} 
+}
+
 
 Permalink: https://dbpedia.org/sparql?default-graph-uri=&qtxt=%20%20%20%20%20define%20input%3Aifp%20%22IFP_OFF%22%20%20select%20%3Fs1%20as%20%3Fc1%2C%20(bif%3Asearch_excerpt%20(bif%3Avector%20('GRAPH'%2C%20'THEORY')%2C%20%3Fo1))%20as%20%3Fc2%2C%20%3Fsc%2C%20%3Frank%2C%20%3Fg%20where%20%7B%7B%7B%20select%20%3Fs1%2C%20(%3Fsc%20*%203e-1)%20as%20%3Fsc%2C%20%3Fo1%2C%20(sql%3Arnk_scale%20(%3CLONG%3A%3AIRI_RANK%3E%20(%3Fs1)))%20as%20%3Frank%2C%20%3Fg%20where%20%20%0A%20%20%7B%20%0A%20%20%20%20quad%20map%20virtrdf%3ADefaultQuadMap%20%0A%20%20%20%20%7B%20%0A%20%20%20%20%20%20graph%20%3Fg%20%0A%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%3Fs1%20%3Fs1textp%20%3Fo1%20.%0A%20%20%20%20%20%20%20%20%3Fo1%20bif%3Acontains%20%20'(GRAPH%20AND%20THEORY%20AND%20(CYCLIC%20OR%20ACYCLIC%20OR%20WEIGHTED%20OR%20UNWEIGHTED%20OR%20ORIENTED%20OR%20DIRECTED%20OR%20UNDIRECTED))'%20%20option%20(score%20%3Fsc)%20%20.%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%7D%0A%20order%20by%20desc%20(%3Fsc%20*%203e-1%20%2B%20sql%3Arnk_scale%20(%3CLONG%3A%3AIRI_RANK%3E%20(%3Fs1)))%20%20limit%202000%20%20offset%200%20%7D%7D%7D%20%0A&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on
 
